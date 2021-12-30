@@ -1,0 +1,17 @@
+version: '3.4'
+
+services:
+  gateway-account:
+    image: l2/gateway-account:0.1.0
+    container_name: gateway-account
+    ports:
+      - 5041:80
+    depends_on:
+      - api-account
+  api-account:
+    image: l2/api-account:0.1.0
+    container_name: api-account
+    extra_hosts:
+      - "psqldata:172.17.0.1"
+    environment:
+        - ConnectionString=Host=psqldata;Port=5432;Database=l2;Username=postgres;Password=1qazxsw2
