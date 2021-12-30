@@ -1,0 +1,23 @@
+{
+    "Routes": [
+        {
+            "DownstreamPathTemplate": "/api/account",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "api-user",
+                    "Port": 80
+                }
+            ],
+            "UpstreamPathTemplate": "/api/{everything}",
+            "UpstreamHttpMethod": [
+                "POST",
+                "PUT",
+                "GET"
+            ]
+        }
+    ],
+    "GlobalConfiguration": {
+        
+    }
+}
