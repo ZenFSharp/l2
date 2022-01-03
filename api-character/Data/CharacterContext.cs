@@ -11,4 +11,5 @@ public class L2CharacterContext : DbContext
     }
     public DbSet<Character>? Character { get; set; }
     public DbSet<Race>? Race { get; set; }
+    public DbSet<Occupation>? Occupation { get; set; }
 }

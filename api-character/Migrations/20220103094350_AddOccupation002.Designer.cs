@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using api_character.Data;
@@ -11,9 +12,10 @@ using api_character.Data;
 namespace api_character.Migrations
 {
     [DbContext(typeof(L2CharacterContext))]
-    partial class L2CharacterContextModelSnapshot : ModelSnapshot
+    [Migration("20220103094350_AddOccupation002")]
+    partial class AddOccupation002
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
