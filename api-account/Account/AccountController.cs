@@ -10,6 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using StackExchange.Redis;
+using Microsoft.AspNetCore.Authorization;
 
 namespace api_account.Account;
 using Data;
@@ -22,26 +23,27 @@ public class AccountController : ControllerBase
     private readonly ILogger<AccountController> _logger;
     private readonly L2AccountContext _context;
     private readonly IAccountService _accountService;
-    private readonly JwtSetting _jwtSetting;
     private readonly IRedisService _redis;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IConfiguration _configuration;
 
     public AccountController(ILogger<AccountController> logger,
         L2AccountContext context,
         IAccountService accountService,
         IRedisService redis,
-        IOptions<JwtSetting> jwtSetting,
-        IHttpContextAccessor httpContextAccessor)
+        IHttpContextAccessor httpContextAccessor,
+        IConfiguration configuration)
     {
         _logger = logger;
         _context = context;
         _accountService = accountService;
         _redis = redis;
-        _jwtSetting = jwtSetting.Value;
         _httpContextAccessor = httpContextAccessor;
+        _configuration = configuration;
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<string> Get()
     {
         return await Task.FromResult("hello");
@@ -97,9 +99,10 @@ public class AccountController : ControllerBase
         }
 
         var claims = new[] { new Claim(ClaimTypes.Name!, model.Name!), new Claim("user_id", valid.ToString()) };
-        var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_jwtSetting.SecretKey!));
+        _logger.LogInformation(_configuration["JWTSetting:SecretKey"]);
+        var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration["JWTSetting:SecretKey"]));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-        var jwtToken = new JwtSecurityToken(_jwtSetting.Issuer, _jwtSetting.Audience, claims, expires: DateTime.Now.AddMinutes(_jwtSetting.AccessExpiration), signingCredentials: credentials);
+        var jwtToken = new JwtSecurityToken(_configuration["JWTSetting:Issuer"], _configuration["JWTSetting:Audience"], claims, expires: DateTime.Now.AddMinutes(int.Parse(_configuration["JWTSetting:AccessExpiration"])), signingCredentials: credentials);
         var token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
 
         return Ok(token);
