@@ -10,6 +10,7 @@ public class Race
     public int Wit { get; set; }
     public int Men { get; set; }
     public string Name { get; set; }
+    public string? Description { get; set; }
 
     public Race()
     {
