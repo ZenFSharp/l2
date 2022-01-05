@@ -42,11 +42,13 @@ public class AccountController : ControllerBase
         _configuration = configuration;
     }
 
-    [HttpGet]
+    [HttpGet("firstname")]
     [Authorize]
     public async Task<string> Get()
     {
-        return await Task.FromResult("hello");
+        var acc = await _context.Account!.FirstAsync().ConfigureAwait(false);
+        return acc.Name!;
+        // return await Task.FromResult("Hello");
     }
 
     [HttpPost("signup")]
@@ -99,10 +101,10 @@ public class AccountController : ControllerBase
         }
 
         var claims = new[] { new Claim(ClaimTypes.Name!, model.Name!), new Claim("user_id", valid.ToString()) };
-        _logger.LogInformation(_configuration["JWTSetting:SecretKey"]);
-        var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration["JWTSetting:SecretKey"]));
+        _logger.LogInformation(_configuration["JWTSettingSecretKey"]);
+        var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration["JWTSettingSecretKey"]));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-        var jwtToken = new JwtSecurityToken(_configuration["JWTSetting:Issuer"], _configuration["JWTSetting:Audience"], claims, expires: DateTime.Now.AddMinutes(int.Parse(_configuration["JWTSetting:AccessExpiration"])), signingCredentials: credentials);
+        var jwtToken = new JwtSecurityToken(_configuration["JWTSettingIssuer"], _configuration["JWTSettingAudience"], claims, expires: DateTime.Now.AddMinutes(int.Parse(_configuration["JWTSettingAccessExpiration"])), signingCredentials: credentials);
         var token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
 
         return Ok(token);

@@ -12,6 +12,12 @@ services:
     image: l2/api-account:0.1.0
     container_name: api-account
     extra_hosts:
-      - "psqldata:172.17.0.1"
+      dockerhost: 172.17.0.1
     environment:
-        - ConnectionString=Host=psqldata;Port=5432;Database=l2;Username=postgres;Password=1qazxsw2
+      ConnectionString: Host=dockerhost;Port=5432;Database=l2_account;Username=postgres;Password=1qazxsw2
+      DockerHost: dockerhost
+      JWTSettingSecretKey: l2_server_end_api_account
+      JWTSettingIssuer: zen
+      JWTSettingAudience: api_account
+      JWTSettingAccessExpiration: 60
+      JWTSettingRefreshExpiration: 80

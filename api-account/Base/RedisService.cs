@@ -16,9 +16,14 @@ public interface IRedisService
 public class RedisService : IRedisService
 {
     private ConnectionMultiplexer? redis;
+    private readonly IConfiguration _configuration;
+    public RedisService(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
     public ConnectionMultiplexer GetConnection()
     {
-        if (redis == null) redis = ConnectionMultiplexer.Connect("localhost");
+        if (redis == null) redis = ConnectionMultiplexer.Connect(_configuration["DockerHost"]);
         return redis;
     }
 }
