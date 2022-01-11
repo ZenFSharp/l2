@@ -5,8 +5,8 @@
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
-                    "Host": "api-account",
-                    "Port": 80
+                    "Host": "localhost",
+                    "Port": 5087
                 }
             ],
             "UpstreamPathTemplate": "/api/a/{everything}",
@@ -15,9 +15,27 @@
                 "PUT",
                 "GET"
             ]
+        },
+        {
+            "DownstreamPathTemplate": "/api/race/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 5198
+                }
+            ],
+            "UpstreamPathTemplate": "/api/c/race/{everything}",
+            "UpstreamHttpMethod": [
+                "POST",
+                "PUT",
+                "GET"
+            ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "IdentityApiKey",
+                "AllowedScopes": []
+            }
         }
     ],
-    "GlobalConfiguration": {
-        
-    }
+    "GlobalConfiguration": {}
 }
