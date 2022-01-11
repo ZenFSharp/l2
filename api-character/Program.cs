@@ -1,4 +1,5 @@
 using api_character.Data;
+using api_character.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<L2CharacterContext>(options =>
                 options.UseNpgsql(builder.Configuration["ConnectionString"]));
+
+builder.Services.AddScoped<IRaceService, RaceService>();
 
 var app = builder.Build();
 
